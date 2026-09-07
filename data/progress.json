@@ -1,6 +1,6 @@
 {
-  "currentMissionIndex": 4,
-  "lastGeneratedAt": "2026-09-06T16:19:20.074Z",
+  "currentMissionIndex": 5,
+  "lastGeneratedAt": "2026-09-07T18:16:28.765Z",
   "history": [
     {
       "date": "2026-08-24",
@@ -85,6 +85,12 @@
       "missionDay": 4,
       "title": "Noisy sensors",
       "skill": "Sensor processing"
+    },
+    {
+      "date": "2026-09-07",
+      "missionDay": 5,
+      "title": "Waypoint planning",
+      "skill": "Motion planning"
     }
   ]
 }
