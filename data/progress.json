@@ -1,6 +1,6 @@
 {
-  "currentMissionIndex": 6,
-  "lastGeneratedAt": "2026-09-08T17:16:25.859Z",
+  "currentMissionIndex": 7,
+  "lastGeneratedAt": "2026-09-09T17:10:44.174Z",
   "history": [
     {
       "date": "2026-08-24",
@@ -97,6 +97,12 @@
       "missionDay": 6,
       "title": "Robot state logs",
       "skill": "Debugging and data"
+    },
+    {
+      "date": "2026-09-09",
+      "missionDay": 7,
+      "title": "ROS2 mental model",
+      "skill": "ROS2 architecture"
     }
   ]
 }
