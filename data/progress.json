@@ -1,6 +1,6 @@
 {
-  "currentMissionIndex": 7,
-  "lastGeneratedAt": "2026-09-09T17:10:44.174Z",
+  "currentMissionIndex": 8,
+  "lastGeneratedAt": "2026-09-10T17:01:25.857Z",
   "history": [
     {
       "date": "2026-08-24",
@@ -103,6 +103,12 @@
       "missionDay": 7,
       "title": "ROS2 mental model",
       "skill": "ROS2 architecture"
+    },
+    {
+      "date": "2026-09-10",
+      "missionDay": 8,
+      "title": "Testing robot math",
+      "skill": "Software testing"
     }
   ]
 }
