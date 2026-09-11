@@ -1,6 +1,6 @@
 {
-  "currentMissionIndex": 8,
-  "lastGeneratedAt": "2026-09-10T17:01:25.857Z",
+  "currentMissionIndex": 9,
+  "lastGeneratedAt": "2026-09-11T17:02:25.799Z",
   "history": [
     {
       "date": "2026-08-24",
@@ -109,6 +109,12 @@
       "missionDay": 8,
       "title": "Testing robot math",
       "skill": "Software testing"
+    },
+    {
+      "date": "2026-09-11",
+      "missionDay": 9,
+      "title": "Obstacle thinking",
+      "skill": "Autonomy"
     }
   ]
 }
