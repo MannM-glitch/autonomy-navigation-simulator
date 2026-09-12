@@ -1,6 +1,6 @@
 {
-  "currentMissionIndex": 9,
-  "lastGeneratedAt": "2026-09-11T17:02:25.799Z",
+  "currentMissionIndex": 10,
+  "lastGeneratedAt": "2026-09-12T16:21:13.656Z",
   "history": [
     {
       "date": "2026-08-24",
@@ -115,6 +115,12 @@
       "missionDay": 9,
       "title": "Obstacle thinking",
       "skill": "Autonomy"
+    },
+    {
+      "date": "2026-09-12",
+      "missionDay": 10,
+      "title": "Internship story",
+      "skill": "Technical communication"
     }
   ]
 }
