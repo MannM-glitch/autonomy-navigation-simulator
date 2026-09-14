@@ -1,6 +1,6 @@
 {
-  "currentMissionIndex": 1,
-  "lastGeneratedAt": "2026-09-13T16:58:46.743Z",
+  "currentMissionIndex": 2,
+  "lastGeneratedAt": "2026-09-14T18:40:12.994Z",
   "history": [
     {
       "date": "2026-08-24",
@@ -127,6 +127,12 @@
       "missionDay": 1,
       "title": "Robot loop basics",
       "skill": "Robotics fundamentals"
+    },
+    {
+      "date": "2026-09-14",
+      "missionDay": 2,
+      "title": "Coordinate frames",
+      "skill": "Math for robotics"
     }
   ]
 }
