@@ -11,3 +11,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 learning-log/*.tmp
+.venv/
+__pycache__/
+*.pyc
+simulation/output/
