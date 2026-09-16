@@ -2,6 +2,10 @@
 
 Interactive robotics software project for autonomous route planning, differential-drive control, noisy range sensing, and telemetry inspection.
 
+## Whole-body MuJoCo experiment
+
+**[SENTRY: a 12-actuator quadruped that lowers a sensor platform and recovers from pushes](SENTRY.md)** adds a full-body physics experiment to this repository. Run `npm run dev` and open **[/sentry.html](http://127.0.0.1:5173/sentry.html)** for the visual comparison, telemetry, and five-case benchmark. See the [simulation guide](simulation/README.md) to launch the live MuJoCo viewer, reproduce the results, and understand the controller's limits.
+
 ## Project Summary
 
 The simulator models a mobile robot that plans a route through obstacles, tracks the route with a PID controller, scans nearby geometry with noisy range sensors, and exposes runtime diagnostics in a browser UI.
@@ -73,4 +77,3 @@ Phase 6: Demo report with screenshots, metrics, tests, and failure analysis.
 The workflow in `.github/workflows/daily-progress.yml` runs once a day. It creates a dated engineering entry from `data/missions.json`, runs tests, commits the update, and pushes it with `GITHUB_TOKEN`.
 
 GitHub scheduled workflows run after this repo is pushed to GitHub and Actions are enabled for the repository.
-

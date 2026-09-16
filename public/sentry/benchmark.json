@@ -1,0 +1,275 @@
+{
+  "criteria": "No fall; peak tilt <3 deg; height RMSE <6 mm; drift <100 mm; each recovery <1 s",
+  "rows": [
+    {
+      "case": "Nominal",
+      "controller": "whole_body",
+      "config": {
+        "payloadKg": 1.5,
+        "friction": 0.8,
+        "pushScale": 1.0,
+        "duration": 14.0,
+        "physicsHz": 500,
+        "controlHz": 100
+      },
+      "metrics": {
+        "rmsTiltDeg": 0.18211446986433472,
+        "peakTiltDeg": 0.9825752325948959,
+        "heightRmseMm": 1.5043583038616435,
+        "maxDriftMm": 46.08215332388287,
+        "minHeightM": 0.3405239739398245,
+        "recoverySeconds": [
+          0.19,
+          0.19
+        ],
+        "solverFailures": 0,
+        "saturationFraction": 0.0,
+        "fell": false
+      },
+      "meetsMission": true
+    },
+    {
+      "case": "Nominal",
+      "controller": "joint_pd",
+      "config": {
+        "payloadKg": 1.5,
+        "friction": 0.8,
+        "pushScale": 1.0,
+        "duration": 14.0,
+        "physicsHz": 500,
+        "controlHz": 100
+      },
+      "metrics": {
+        "rmsTiltDeg": 0.9591982939907318,
+        "peakTiltDeg": 2.492882737873895,
+        "heightRmseMm": 14.616047544832876,
+        "maxDriftMm": 55.17751481819226,
+        "minHeightM": 0.3205329300905201,
+        "recoverySeconds": [
+          null,
+          0.73
+        ],
+        "solverFailures": 0,
+        "saturationFraction": 0.0,
+        "fell": false
+      },
+      "meetsMission": false
+    },
+    {
+      "case": "Heavy payload",
+      "controller": "whole_body",
+      "config": {
+        "payloadKg": 4.0,
+        "friction": 0.8,
+        "pushScale": 1.0,
+        "duration": 14.0,
+        "physicsHz": 500,
+        "controlHz": 100
+      },
+      "metrics": {
+        "rmsTiltDeg": 0.15839574071411877,
+        "peakTiltDeg": 0.7677497342971276,
+        "heightRmseMm": 1.3301863388429822,
+        "maxDriftMm": 39.05827246398046,
+        "minHeightM": 0.3403401537294405,
+        "recoverySeconds": [
+          0.15,
+          0.15
+        ],
+        "solverFailures": 0,
+        "saturationFraction": 0.0,
+        "fell": false
+      },
+      "meetsMission": true
+    },
+    {
+      "case": "Heavy payload",
+      "controller": "joint_pd",
+      "config": {
+        "payloadKg": 4.0,
+        "friction": 0.8,
+        "pushScale": 1.0,
+        "duration": 14.0,
+        "physicsHz": 500,
+        "controlHz": 100
+      },
+      "metrics": {
+        "rmsTiltDeg": 0.8612677087241143,
+        "peakTiltDeg": 2.4401796514857867,
+        "heightRmseMm": 17.892796119514184,
+        "maxDriftMm": 53.8147371482292,
+        "minHeightM": 0.31673813507470916,
+        "recoverySeconds": [
+          null,
+          0.83
+        ],
+        "solverFailures": 0,
+        "saturationFraction": 0.0,
+        "fell": false
+      },
+      "meetsMission": false
+    },
+    {
+      "case": "Stronger pushes",
+      "controller": "whole_body",
+      "config": {
+        "payloadKg": 1.5,
+        "friction": 0.8,
+        "pushScale": 1.5,
+        "duration": 14.0,
+        "physicsHz": 500,
+        "controlHz": 100
+      },
+      "metrics": {
+        "rmsTiltDeg": 0.6349354884003018,
+        "peakTiltDeg": 2.3217698970641485,
+        "heightRmseMm": 2.304552937460311,
+        "maxDriftMm": 87.79670086128941,
+        "minHeightM": 0.3405451406293588,
+        "recoverySeconds": [
+          0.37,
+          0.33
+        ],
+        "solverFailures": 0,
+        "saturationFraction": 0.0,
+        "fell": false
+      },
+      "meetsMission": true
+    },
+    {
+      "case": "Stronger pushes",
+      "controller": "joint_pd",
+      "config": {
+        "payloadKg": 1.5,
+        "friction": 0.8,
+        "pushScale": 1.5,
+        "duration": 14.0,
+        "physicsHz": 500,
+        "controlHz": 100
+      },
+      "metrics": {
+        "rmsTiltDeg": 1.5229013723891154,
+        "peakTiltDeg": 5.4436060258705385,
+        "heightRmseMm": 14.409293450228883,
+        "maxDriftMm": 96.37863652515841,
+        "minHeightM": 0.3205393117485436,
+        "recoverySeconds": [
+          null,
+          null
+        ],
+        "solverFailures": 0,
+        "saturationFraction": 0.0,
+        "fell": false
+      },
+      "meetsMission": false
+    },
+    {
+      "case": "Slippery floor",
+      "controller": "whole_body",
+      "config": {
+        "payloadKg": 1.5,
+        "friction": 0.35,
+        "pushScale": 1.0,
+        "duration": 14.0,
+        "physicsHz": 500,
+        "controlHz": 100
+      },
+      "metrics": {
+        "rmsTiltDeg": 0.5874438068650355,
+        "peakTiltDeg": 0.9960493323871527,
+        "heightRmseMm": 5.473401609397938,
+        "maxDriftMm": 65.25430461657493,
+        "minHeightM": 0.33669994415618976,
+        "recoverySeconds": [
+          3.55,
+          0.33
+        ],
+        "solverFailures": 0,
+        "saturationFraction": 0.0,
+        "fell": false
+      },
+      "meetsMission": false
+    },
+    {
+      "case": "Slippery floor",
+      "controller": "joint_pd",
+      "config": {
+        "payloadKg": 1.5,
+        "friction": 0.35,
+        "pushScale": 1.0,
+        "duration": 14.0,
+        "physicsHz": 500,
+        "controlHz": 100
+      },
+      "metrics": {
+        "rmsTiltDeg": 0.8419488019817167,
+        "peakTiltDeg": 2.0325176420019244,
+        "heightRmseMm": 14.85771354046658,
+        "maxDriftMm": 80.90471022577431,
+        "minHeightM": 0.3205393117485435,
+        "recoverySeconds": [
+          null,
+          null
+        ],
+        "solverFailures": 0,
+        "saturationFraction": 0.0,
+        "fell": false
+      },
+      "meetsMission": false
+    },
+    {
+      "case": "Beyond stance limits",
+      "controller": "whole_body",
+      "config": {
+        "payloadKg": 4.0,
+        "friction": 0.25,
+        "pushScale": 2.5,
+        "duration": 14.0,
+        "physicsHz": 500,
+        "controlHz": 100
+      },
+      "metrics": {
+        "rmsTiltDeg": 123.58855036373052,
+        "peakTiltDeg": 181.51931176519494,
+        "heightRmseMm": 158.01750448723544,
+        "maxDriftMm": 750.2858488358781,
+        "minHeightM": 0.15287236833273204,
+        "recoverySeconds": [
+          null,
+          null
+        ],
+        "solverFailures": 1,
+        "saturationFraction": 0.3871428571428571,
+        "fell": true
+      },
+      "meetsMission": false
+    },
+    {
+      "case": "Beyond stance limits",
+      "controller": "joint_pd",
+      "config": {
+        "payloadKg": 4.0,
+        "friction": 0.25,
+        "pushScale": 2.5,
+        "duration": 14.0,
+        "physicsHz": 500,
+        "controlHz": 100
+      },
+      "metrics": {
+        "rmsTiltDeg": 0.831907878924268,
+        "peakTiltDeg": 1.9956590380025585,
+        "heightRmseMm": 17.91333909084398,
+        "maxDriftMm": 915.111107588539,
+        "minHeightM": 0.3160584903928894,
+        "recoverySeconds": [
+          null,
+          null
+        ],
+        "solverFailures": 0,
+        "saturationFraction": 0.0,
+        "fell": false
+      },
+      "meetsMission": false
+    }
+  ]
+}
