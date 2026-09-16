@@ -78,9 +78,9 @@ h2 {
 
 .status-strip {
   display: grid;
-  grid-template-columns: repeat(3, minmax(150px, 1fr));
+  grid-template-columns: repeat(4, minmax(132px, 1fr));
   gap: 10px;
-  min-width: min(620px, 100%);
+  min-width: min(760px, 100%);
 }
 
 .metric,
@@ -188,8 +188,9 @@ h2 {
   border-radius: 8px;
   background: #ffffff;
   color: #3c4a4f;
-  font-size: 0.84rem;
+  font-size: 0.78rem;
   font-weight: 800;
+  overflow-wrap: anywhere;
 }
 
 .tab.active {
@@ -246,18 +247,18 @@ h2 {
   accent-color: #0f8b8d;
 }
 
-.lesson-heading {
+.note-heading {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 10px;
   align-items: start;
 }
 
-.lesson-heading svg {
+.note-heading svg {
   color: #a0473a;
 }
 
-.lesson-list {
+.note-list {
   display: grid;
   gap: 10px;
   margin: 0;
@@ -265,7 +266,7 @@ h2 {
   list-style: none;
 }
 
-.lesson-list li {
+.note-list li {
   min-height: 42px;
   padding: 10px 12px;
   border-left: 4px solid #f3c969;
@@ -361,4 +362,3 @@ h2 {
     right: 10px;
   }
 }
-

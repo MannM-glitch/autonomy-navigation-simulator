@@ -2,16 +2,18 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   Activity,
-  BookOpen,
+  BrainCircuit,
   Gauge,
   GitBranch,
   Map,
+  Network,
   Pause,
   Play,
-  RotateCcw,
   Radar,
-  SlidersHorizontal,
-  Target
+  RotateCcw,
+  Route,
+  ScanLine,
+  SlidersHorizontal
 } from 'lucide-react';
 import {
   clamp,
@@ -19,32 +21,31 @@ import {
   distance,
   getHeadingError,
   makeSensorReadings,
+  planAStarPath,
   stepDifferentialDrive,
   type Obstacle,
   type PidState,
+  type PlannedPath,
   type RobotState,
   type SensorReading,
   type Waypoint
 } from './robotics';
 import './styles.css';
 
-type Mode = 'control' | 'sensors' | 'planner' | 'ros';
+type Mode = 'control' | 'perception' | 'planner' | 'architecture';
 
 const FIELD_WIDTH = 900;
 const FIELD_HEIGHT = 560;
 const WHEEL_BASE = 54;
+const GRID_SIZE = 30;
 
-const waypoints: Waypoint[] = [
-  { x: 170, y: 126 },
-  { x: 705, y: 124 },
-  { x: 744, y: 430 },
-  { x: 254, y: 438 }
-];
+const missionGoal: Waypoint = { x: 802, y: 438 };
 
 const obstacles: Obstacle[] = [
   { x: 438, y: 164, radius: 54 },
   { x: 566, y: 362, radius: 70 },
-  { x: 302, y: 302, radius: 42 }
+  { x: 302, y: 302, radius: 42 },
+  { x: 698, y: 218, radius: 44 }
 ];
 
 const startingRobot: RobotState = {
@@ -55,26 +56,26 @@ const startingRobot: RobotState = {
   rightVelocity: 0
 };
 
-const lessons = {
+const systemNotes = {
   control: {
-    eyebrow: 'Controls',
-    title: 'PID steering turns angle error into wheel commands.',
-    points: ['P reacts now', 'I remembers bias', 'D dampens fast changes']
+    eyebrow: 'Controller',
+    title: 'Closed-loop PID steering converts route error into wheel commands.',
+    points: ['Angle error is measured every frame', 'P/I/D terms shape the turn rate', 'Wheel speeds execute the correction']
   },
-  sensors: {
-    eyebrow: 'Sensors',
-    title: 'Range rays show why robots never receive perfect truth.',
-    points: ['Noise shifts readings', 'Range limits hide far objects', 'Confidence belongs in every log']
+  perception: {
+    eyebrow: 'Perception',
+    title: 'Range scans estimate nearby structure with imperfect measurements.',
+    points: ['Rays return distance to walls or obstacles', 'Noise changes confidence, not ground truth', 'Closest range is a safety signal']
   },
   planner: {
-    eyebrow: 'Planning',
-    title: 'Waypoints convert a hard route into reachable local goals.',
-    points: ['Pick the next target', 'Reduce distance error', 'Advance when close enough']
+    eyebrow: 'Global planner',
+    title: 'A* searches an occupancy grid before the controller starts tracking.',
+    points: ['Obstacle clearance expands blocked cells', 'Explored cells show search effort', 'The yellow route is the selected path']
   },
-  ros: {
-    eyebrow: 'ROS2',
-    title: 'Robot apps become easier to debug when split into nodes and topics.',
-    points: ['sensor_node publishes ranges', 'controller_node subscribes to goals', 'dashboard_node records state']
+  architecture: {
+    eyebrow: 'System architecture',
+    title: 'Planning, perception, control, and telemetry are separated like robotics nodes.',
+    points: ['planner_node publishes route waypoints', 'controller_node publishes wheel commands', 'dashboard_node records state']
   }
 } satisfies Record<Mode, { eyebrow: string; title: string; points: string[] }>;
 
@@ -116,7 +117,9 @@ function drawField(
   robot: RobotState,
   currentWaypoint: number,
   sensors: SensorReading[],
-  path: Waypoint[]
+  tracePath: Waypoint[],
+  plannedRoute: PlannedPath,
+  target: Waypoint
 ) {
   const ctx = canvas.getContext('2d');
   if (!ctx) {
@@ -134,42 +137,64 @@ function drawField(
 
   ctx.strokeStyle = '#d8d2c4';
   ctx.lineWidth = 1;
-  for (let x = 0; x <= FIELD_WIDTH; x += 45) {
+  for (let x = 0; x <= FIELD_WIDTH; x += GRID_SIZE) {
     ctx.beginPath();
     ctx.moveTo(x, 0);
     ctx.lineTo(x, FIELD_HEIGHT);
     ctx.stroke();
   }
-  for (let y = 0; y <= FIELD_HEIGHT; y += 45) {
+  for (let y = 0; y <= FIELD_HEIGHT; y += GRID_SIZE) {
     ctx.beginPath();
     ctx.moveTo(0, y);
     ctx.lineTo(FIELD_WIDTH, y);
     ctx.stroke();
   }
 
+  ctx.fillStyle = 'rgba(160, 71, 58, 0.16)';
+  plannedRoute.blockedCells.forEach((cell) => {
+    ctx.fillRect(cell.col * GRID_SIZE, cell.row * GRID_SIZE, GRID_SIZE, GRID_SIZE);
+  });
+
+  ctx.fillStyle = 'rgba(89, 122, 150, 0.12)';
+  plannedRoute.exploredCells.forEach((cell) => {
+    ctx.fillRect(cell.col * GRID_SIZE + 6, cell.row * GRID_SIZE + 6, GRID_SIZE - 12, GRID_SIZE - 12);
+  });
+
   ctx.strokeStyle = '#263238';
   ctx.lineWidth = 3;
   ctx.strokeRect(10, 10, FIELD_WIDTH - 20, FIELD_HEIGHT - 20);
 
-  ctx.strokeStyle = '#597a96';
-  ctx.lineWidth = 3;
-  ctx.setLineDash([10, 10]);
-  ctx.beginPath();
-  waypoints.forEach((point, index) => {
-    if (index === 0) {
-      ctx.moveTo(point.x, point.y);
-    } else {
-      ctx.lineTo(point.x, point.y);
-    }
-  });
-  ctx.stroke();
-  ctx.setLineDash([]);
+  if (plannedRoute.path.length > 1) {
+    ctx.strokeStyle = '#d69d23';
+    ctx.lineWidth = 5;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    plannedRoute.path.forEach((point, index) => {
+      if (index === 0) {
+        ctx.moveTo(point.x, point.y);
+      } else {
+        ctx.lineTo(point.x, point.y);
+      }
+    });
+    ctx.stroke();
 
-  if (path.length > 1) {
-    ctx.strokeStyle = 'rgba(15, 139, 141, 0.76)';
+    plannedRoute.path.forEach((point, index) => {
+      if (index === 0 || index === plannedRoute.path.length - 1 || index % 3 !== 0) {
+        return;
+      }
+      ctx.fillStyle = '#f3c969';
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, 4, 0, Math.PI * 2);
+      ctx.fill();
+    });
+  }
+
+  if (tracePath.length > 1) {
+    ctx.strokeStyle = 'rgba(15, 139, 141, 0.82)';
     ctx.lineWidth = 4;
     ctx.beginPath();
-    path.forEach((point, index) => {
+    tracePath.forEach((point, index) => {
       if (index === 0) {
         ctx.moveTo(point.x, point.y);
       } else {
@@ -180,6 +205,11 @@ function drawField(
   }
 
   obstacles.forEach((obstacle) => {
+    ctx.fillStyle = 'rgba(160, 71, 58, 0.16)';
+    ctx.beginPath();
+    ctx.arc(obstacle.x, obstacle.y, obstacle.radius + 18, 0, Math.PI * 2);
+    ctx.fill();
+
     const gradient = ctx.createRadialGradient(
       obstacle.x - 14,
       obstacle.y - 18,
@@ -199,17 +229,9 @@ function drawField(
     ctx.stroke();
   });
 
-  waypoints.forEach((point, index) => {
-    ctx.fillStyle = index === currentWaypoint ? '#0f8b8d' : '#6d7c84';
-    ctx.beginPath();
-    ctx.arc(point.x, point.y, index === currentWaypoint ? 12 : 9, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '700 12px Inter, system-ui, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(String(index + 1), point.x, point.y + 1);
-  });
+  drawRouteMarker(ctx, plannedRoute.path[0], 'S', '#263238');
+  drawRouteMarker(ctx, missionGoal, 'G', '#0f8b8d');
+  drawRouteMarker(ctx, target, String(currentWaypoint + 1), '#d69d23');
 
   sensors.forEach((reading) => {
     const absolute = robot.heading + reading.angle;
@@ -248,6 +270,22 @@ function drawField(
   ctx.restore();
 }
 
+function drawRouteMarker(ctx: CanvasRenderingContext2D, point: Waypoint | undefined, label: string, color: string) {
+  if (!point) {
+    return;
+  }
+
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(point.x, point.y, 12, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '700 11px Inter, system-ui, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(label, point.x, point.y + 1);
+}
+
 function roundRect(
   ctx: CanvasRenderingContext2D,
   x: number,
@@ -268,15 +306,28 @@ function roundRect(
 function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [running, setRunning] = useState(true);
-  const [mode, setMode] = useState<Mode>('control');
+  const [mode, setMode] = useState<Mode>('planner');
   const [robot, setRobot] = useState<RobotState>(startingRobot);
   const [pid, setPid] = useState<PidState>(() => createPid(2.4, 0.02, 0.45));
   const [speed, setSpeed] = useState(74);
   const [noise, setNoise] = useState(9);
+  const [clearance, setClearance] = useState(18);
   const [currentWaypoint, setCurrentWaypoint] = useState(0);
-  const [path, setPath] = useState<Waypoint[]>([{ x: startingRobot.x, y: startingRobot.y }]);
+  const [tracePath, setTracePath] = useState<Waypoint[]>([{ x: startingRobot.x, y: startingRobot.y }]);
 
-  const target = waypoints[currentWaypoint];
+  const plannedRoute = useMemo(
+    () =>
+      planAStarPath(startingRobot, missionGoal, obstacles, {
+        fieldWidth: FIELD_WIDTH,
+        fieldHeight: FIELD_HEIGHT,
+        cellSize: GRID_SIZE,
+        clearance
+      }),
+    [clearance]
+  );
+  const routeTargets = plannedRoute.path.length > 1 ? plannedRoute.path : [missionGoal];
+  const activeWaypoint = Math.min(currentWaypoint, routeTargets.length - 1);
+  const target = routeTargets[activeWaypoint] ?? missionGoal;
   const headingError = getHeadingError(robot, target);
   const targetDistance = distance(robot, target);
   const sensors = useMemo(
@@ -284,11 +335,11 @@ function App() {
     [robot, noise]
   );
   const closestSensor = sensors.reduce((best, item) => Math.min(best, item.distance), Number.POSITIVE_INFINITY);
-  const lesson = lessons[mode];
+  const systemNote = systemNotes[mode];
 
   useAnimationFrame(running, (dt) => {
     setRobot((currentRobot) => {
-      const activeTarget = waypoints[currentWaypoint];
+      const activeTarget = routeTargets[activeWaypoint] ?? missionGoal;
       const error = getHeadingError(currentRobot, activeTarget);
       const nextPid = pid.step(error, dt);
       const turn = clamp(nextPid.output, -95, 95);
@@ -304,16 +355,20 @@ function App() {
       );
 
       setPid(nextPid.controller);
-      setPath((currentPath) => {
-        const last = currentPath[currentPath.length - 1];
+      setTracePath((currentPath) => {
+        const last = currentPath[currentPath.length - 1] ?? nextRobot;
         if (distance(last, nextRobot) < 8) {
           return currentPath;
         }
-        return [...currentPath.slice(-180), { x: nextRobot.x, y: nextRobot.y }];
+        return [...currentPath.slice(-220), { x: nextRobot.x, y: nextRobot.y }];
       });
 
-      if (distance(nextRobot, activeTarget) < 28) {
-        setCurrentWaypoint((index) => (index + 1) % waypoints.length);
+      if (distance(nextRobot, activeTarget) < 26) {
+        if (activeWaypoint >= routeTargets.length - 1) {
+          setRunning(false);
+        } else {
+          setCurrentWaypoint((index) => Math.min(index + 1, routeTargets.length - 1));
+        }
       }
 
       return nextRobot;
@@ -325,45 +380,56 @@ function App() {
     if (!canvas) {
       return;
     }
-    drawField(canvas, robot, currentWaypoint, sensors, path);
-  }, [robot, currentWaypoint, sensors, path]);
+    drawField(canvas, robot, activeWaypoint, sensors, tracePath, plannedRoute, target);
+  }, [robot, activeWaypoint, sensors, tracePath, plannedRoute, target]);
 
   function reset() {
     setRobot(startingRobot);
     setPid(createPid(pid.kp, pid.ki, pid.kd));
     setCurrentWaypoint(0);
-    setPath([{ x: startingRobot.x, y: startingRobot.y }]);
+    setTracePath([{ x: startingRobot.x, y: startingRobot.y }]);
+    setRunning(true);
   }
 
-  const rosRows = [
-    ['planner_node', '/goal_waypoint', 'Waypoint'],
+  function updateClearance(value: number) {
+    setClearance(value);
+    setRobot(startingRobot);
+    setPid(createPid(pid.kp, pid.ki, pid.kd));
+    setCurrentWaypoint(0);
+    setTracePath([{ x: startingRobot.x, y: startingRobot.y }]);
+    setRunning(true);
+  }
+
+  const architectureRows = [
+    ['planner_node', '/global_route', 'PlannedPath'],
     ['range_sensor_node', '/range_scan', 'RangeReading[]'],
-    ['pid_controller_node', '/wheel_cmd', 'WheelCommand'],
-    ['dashboard_node', '/robot_state', 'RobotState']
+    ['controller_node', '/wheel_cmd', 'WheelCommand'],
+    ['telemetry_node', '/robot_state', 'RobotState']
   ];
 
   return (
     <main className="app-shell">
       <section className="top-bar" aria-label="Project overview">
         <div>
-          <span className="label">Robotics Internship Lab</span>
-          <h1>Control a simulated robot. Learn like an engineer.</h1>
+          <span className="label">Autonomy Navigation Simulator</span>
+          <h1>Plan, track, and inspect autonomous routes.</h1>
         </div>
         <div className="status-strip" aria-label="Robot metrics">
-          <Metric icon={<Target size={18} />} label="Goal error" value={`${Math.abs(headingError).toFixed(2)} rad`} />
-          <Metric icon={<Gauge size={18} />} label="Distance" value={`${targetDistance.toFixed(0)} px`} />
+          <Metric icon={<Route size={18} />} label="Route length" value={`${plannedRoute.routeLength.toFixed(0)} px`} />
+          <Metric icon={<Network size={18} />} label="Expanded cells" value={`${plannedRoute.exploredCells.length}`} />
+          <Metric icon={<Gauge size={18} />} label="Clearance" value={`${clearance} px`} />
           <Metric icon={<Radar size={18} />} label="Closest range" value={`${closestSensor.toFixed(0)} px`} />
         </div>
       </section>
 
       <section className="workbench">
         <aside className="panel controls-panel" aria-label="Controls">
-          <div className="mode-tabs" role="tablist" aria-label="Learning module">
+          <div className="mode-tabs" role="tablist" aria-label="Diagnostics mode">
             {([
               ['control', SlidersHorizontal],
-              ['sensors', Radar],
+              ['perception', ScanLine],
               ['planner', Map],
-              ['ros', GitBranch]
+              ['architecture', GitBranch]
             ] as const).map(([key, Icon]) => (
               <button
                 key={key}
@@ -396,6 +462,7 @@ function App() {
           </div>
 
           <Slider label="Base speed" min={20} max={140} value={speed} unit="px/s" onChange={setSpeed} />
+          <Slider label="Planner clearance" min={0} max={38} value={clearance} unit="px" onChange={updateClearance} />
           <Slider label="Sensor noise" min={0} max={36} value={noise} unit="px" onChange={setNoise} />
           <Slider label="P gain" min={0} max={5} step={0.1} value={pid.kp} unit="" onChange={(value) => setPid(createPid(value, pid.ki, pid.kd))} />
           <Slider label="I gain" min={0} max={0.2} step={0.01} value={pid.ki} unit="" onChange={(value) => setPid(createPid(pid.kp, value, pid.kd))} />
@@ -404,28 +471,29 @@ function App() {
 
         <section className="field-panel" aria-label="Robot field">
           <canvas ref={canvasRef} className="field-canvas" aria-label="Differential drive simulator" />
-          <div className="path-readout" aria-label="Path statistics">
-            <span>Waypoint {currentWaypoint + 1}/4</span>
-            <span>{path.length} trace samples</span>
+          <div className="path-readout" aria-label="Route statistics">
+            <span>Target {activeWaypoint + 1}/{routeTargets.length}</span>
+            <span>{plannedRoute.blockedCells.length} blocked cells</span>
+            <span>A* {plannedRoute.success ? 'planned' : 'fallback'}</span>
             <span>{running ? 'running' : 'paused'}</span>
           </div>
         </section>
 
-        <aside className="panel lesson-panel" aria-label="Learning notes">
-          <div className="lesson-heading">
-            <BookOpen size={20} />
+        <aside className="panel note-panel" aria-label="System diagnostics">
+          <div className="note-heading">
+            <BrainCircuit size={20} />
             <div>
-              <span className="label">{lesson.eyebrow}</span>
-              <h2>{lesson.title}</h2>
+              <span className="label">{systemNote.eyebrow}</span>
+              <h2>{systemNote.title}</h2>
             </div>
           </div>
-          <ul className="lesson-list">
-            {lesson.points.map((point) => (
+          <ul className="note-list">
+            {systemNote.points.map((point) => (
               <li key={point}>{point}</li>
             ))}
           </ul>
 
-          {mode === 'ros' ? (
+          {mode === 'architecture' ? (
             <table className="ros-table">
               <thead>
                 <tr>
@@ -435,7 +503,7 @@ function App() {
                 </tr>
               </thead>
               <tbody>
-                {rosRows.map((row) => (
+                {architectureRows.map((row) => (
                   <tr key={row[0]}>
                     <td>{row[0]}</td>
                     <td>{row[1]}</td>
@@ -448,10 +516,10 @@ function App() {
             <div className="experiment">
               <Activity size={20} />
               <div>
-                <span className="label">Experiment note</span>
+                <span className="label">Telemetry note</span>
                 <p>
                   Heading error is {headingError.toFixed(2)} rad while the robot is {targetDistance.toFixed(0)} px
-                  from its next waypoint.
+                  from its active route target.
                 </p>
               </div>
             </div>

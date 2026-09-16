@@ -1,21 +1,26 @@
-# Robotics Internship Lab
+# Autonomy Navigation Simulator
 
-An interactive beginner robotics portfolio app for learning the skills that repeatedly show up in robotics internship descriptions: controls, sensors, motion planning, ROS-style system thinking, testing, and experiment logs.
+Interactive robotics software project for autonomous route planning, differential-drive control, noisy range sensing, and telemetry inspection.
 
-## What this repo is for
+## Project Summary
 
-This is designed to be a public portfolio project you can talk about in internship applications:
+The simulator models a mobile robot that plans a route through obstacles, tracks the route with a PID controller, scans nearby geometry with noisy range sensors, and exposes runtime diagnostics in a browser UI.
 
-- A browser simulator for a differential-drive robot, PID steering, noisy range sensors, and waypoint following.
-- Small pure TypeScript robotics helpers with tests, so interviewers can see real engineering habits.
-- A daily learning-log generator and GitHub Action that can push steady progress commits.
-- Plain-English lessons for someone starting from zero.
+## Capabilities
 
-## Skill scan
+- A* global path planning on an occupancy grid with adjustable obstacle clearance.
+- Differential-drive kinematics for two-wheel robot motion.
+- PID heading control for route tracking.
+- Simulated range sensors with configurable measurement noise.
+- Route, blocked-cell, explored-cell, sensor, and robot-trace visualization.
+- Unit tests for robotics math, sensing, motion, and planning behavior.
+- Automated engineering-log workflow for steady experiment records.
+
+## Skill Alignment
 
 Scan date: August 24, 2026.
 
-Recent robotics internship descriptions emphasized:
+Robotics internship descriptions repeatedly emphasized:
 
 - Programming: Python, C++, TypeScript/JavaScript, Git, Linux, and testing.
 - Robotics stack: ROS or ROS2, simulation, sensor pipelines, robot state, autonomy loops.
@@ -23,7 +28,7 @@ Recent robotics internship descriptions emphasized:
 - Perception and planning: cameras, lidar/range sensors, computer vision, SLAM or mapping, path planning.
 - Engineering habits: debugging, data logs, clear documentation, experiments, collaboration.
 
-Sources checked while creating the roadmap:
+Sources checked while creating the project scope:
 
 - [Amazon Robotics Software Development Engineer Intern/Co-op 2026](https://www.amazon.jobs/en/jobs/3136266/robotics-software-development-engineer-intern-co-op-2026)
 - [MERL internship openings](https://www.merl.com/employment/internship-openings)
@@ -31,7 +36,7 @@ Sources checked while creating the roadmap:
 - [Lunar Outpost Robotics Engineering Intern - Summer 2026](https://jobs.type1ventures.com/companies/lunar-outpost/jobs/58926030-robotics-engineering-intern-summer-2026)
 - [ROS Jobs wiki](https://wiki.ros.org/Jobs)
 
-## Quick start
+## Quick Start
 
 ```bash
 npm install
@@ -46,25 +51,26 @@ Then open the URL printed by Vite.
 npm run dev      # Start the app locally
 npm run build    # Type-check and build
 npm test         # Run unit tests
-npm run daily    # Add today's learning-log entry
+npm run daily    # Add today's engineering-log entry
 ```
 
-## Portfolio plan
+## Technical Roadmap
 
-Week 1: Learn the robot loop. Run the simulator, tune PID gains, explain overshoot.
+Phase 1: Differential-drive simulator, PID controller, route telemetry.
 
-Week 2: Add a new sensor model. Save noisy readings and compare filtered versus raw values.
+Phase 2: A* global planning with obstacle clearance and explored-cell diagnostics.
 
-Week 3: Add obstacle-aware planning. Explain why the planner fails in one scenario.
+Phase 3: Sensor-processing experiments with raw versus filtered range readings.
 
-Week 4: Add a ROS2-style architecture note. Map app modules to nodes, topics, and messages.
+Phase 4: ROS2-style architecture notes for planner, perception, controller, and telemetry nodes.
 
-Week 5: Add a small computer-vision module or camera mock. Track a colored target.
+Phase 5: Perception extension using a camera mock or target-tracking module.
 
-Week 6: Write a final demo README with screenshots, metrics, tests, and lessons learned.
+Phase 6: Demo report with screenshots, metrics, tests, and failure analysis.
 
-## Daily commits
+## Engineering Log
 
-The workflow in `.github/workflows/daily-progress.yml` runs once a day. It creates a dated learning log from `data/missions.json`, runs tests, commits the update, and pushes it with `GITHUB_TOKEN`.
+The workflow in `.github/workflows/daily-progress.yml` runs once a day. It creates a dated engineering entry from `data/missions.json`, runs tests, commits the update, and pushes it with `GITHUB_TOKEN`.
 
-GitHub scheduled workflows only run after this repo is pushed to GitHub and Actions are enabled for the repository.
+GitHub scheduled workflows run after this repo is pushed to GitHub and Actions are enabled for the repository.
+

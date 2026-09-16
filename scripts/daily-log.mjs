@@ -5,7 +5,7 @@ import process from 'node:process';
 const root = process.cwd();
 const missionsPath = path.join(root, 'data', 'missions.json');
 const progressPath = path.join(root, 'data', 'progress.json');
-const logDir = path.join(root, 'learning-log');
+const logDir = path.join(root, 'engineering-log');
 
 const today = new Date().toISOString().slice(0, 10);
 const missions = JSON.parse(await readFile(missionsPath, 'utf8'));
@@ -18,7 +18,7 @@ await mkdir(logDir, { recursive: true });
 
 const content = `# ${today}: ${mission.title}
 
-## Internship skill
+## Robotics skill
 
 ${mission.skill}
 
@@ -26,11 +26,11 @@ ${mission.skill}
 
 ${mission.concept}
 
-## Lab
+## Experiment
 
 ${mission.lab}
 
-## Proof to add
+## Evidence to add
 
 ${mission.proof}
 
@@ -38,7 +38,7 @@ ${mission.proof}
 
 - Prediction:
 - Observation:
-- What I learned:
+- Finding:
 - What I will improve next:
 `;
 
@@ -70,4 +70,3 @@ await writeFile(
 );
 
 console.log(`Created ${path.relative(root, logPath)} for ${mission.skill}.`);
-

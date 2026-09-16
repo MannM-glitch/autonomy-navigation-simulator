@@ -1,83 +1,82 @@
 [
   {
     "day": 1,
-    "title": "Robot loop basics",
+    "title": "Robot loop instrumentation",
     "skill": "Robotics fundamentals",
-    "concept": "A robot senses, estimates, decides, acts, then measures the result.",
-    "lab": "Run the simulator for one minute and write what each dashboard metric means.",
-    "proof": "Add one screenshot or one paragraph explaining the robot loop."
+    "concept": "A mobile robot repeatedly senses, estimates, plans, controls, and records state.",
+    "lab": "Run the simulator for one minute and identify which dashboard metric changes first when the robot turns.",
+    "proof": "Add one screenshot or one paragraph describing the robot loop."
   },
   {
     "day": 2,
     "title": "Coordinate frames",
     "skill": "Math for robotics",
-    "concept": "Robot position is easier to reason about when x, y, and heading are explicit.",
-    "lab": "Change the starting pose and predict which direction the robot will move first.",
-    "proof": "Record the starting pose and whether your prediction was right."
+    "concept": "Robot pose is easier to debug when x, y, and heading are explicit.",
+    "lab": "Change the starting pose and predict which direction the controller will command first.",
+    "proof": "Record the starting pose and whether the prediction matched the trace."
   },
   {
     "day": 3,
     "title": "PID tuning",
     "skill": "Controls",
-    "concept": "Proportional gain can reduce error quickly, but too much can cause oscillation.",
+    "concept": "Proportional gain reduces heading error quickly, but too much can cause oscillation.",
     "lab": "Try low, medium, and high P gains. Compare overshoot and settling behavior.",
-    "proof": "Write the best gain values you found and why."
+    "proof": "Record the gain values that produce the cleanest path trace."
   },
   {
     "day": 4,
-    "title": "Noisy sensors",
+    "title": "Range-sensor noise",
     "skill": "Sensor processing",
     "concept": "Sensors return measurements, not truth.",
-    "lab": "Increase range noise and explain how it changes confidence.",
-    "proof": "Save a note comparing low-noise and high-noise runs."
+    "lab": "Increase range noise and describe how it changes the closest-range metric.",
+    "proof": "Compare low-noise and high-noise runs."
   },
   {
     "day": 5,
-    "title": "Waypoint planning",
+    "title": "A* route planning",
     "skill": "Motion planning",
-    "concept": "A planner breaks a goal into smaller reachable targets.",
-    "lab": "Add or move a waypoint in code and observe how the controller reacts.",
-    "proof": "Document the waypoint list and the final path shape."
+    "concept": "A* chooses cells by combining cost-so-far with estimated distance-to-go.",
+    "lab": "Adjust planner clearance and watch the blocked-cell count and route length change.",
+    "proof": "Record the clearance value, blocked-cell count, expanded-cell count, and route length."
   },
   {
     "day": 6,
-    "title": "Robot state logs",
+    "title": "Trace analysis",
     "skill": "Debugging and data",
-    "concept": "Logs turn vague robot behavior into evidence.",
-    "lab": "Use the simulator metrics to explain one failure or inefficiency.",
-    "proof": "Write one bug-style note with expected behavior, actual behavior, and a guess."
+    "concept": "A trace turns vague robot behavior into evidence.",
+    "lab": "Use the route and trace to explain one failure or inefficiency.",
+    "proof": "Write one bug-style note with expected behavior, actual behavior, and a hypothesis."
   },
   {
     "day": 7,
-    "title": "ROS2 mental model",
+    "title": "ROS2-style interface map",
     "skill": "ROS2 architecture",
-    "concept": "ROS2 systems are often organized as nodes that publish and subscribe to topics.",
-    "lab": "Map simulator pieces to possible nodes: controller, sensor, planner, dashboard.",
-    "proof": "Create a small node-topic-message table in the daily log."
+    "concept": "Robotics systems are often organized as nodes that publish and subscribe to topics.",
+    "lab": "Map the planner, sensor, controller, and telemetry modules to nodes and topics.",
+    "proof": "Create a small node-topic-message table in the engineering log."
   },
   {
     "day": 8,
-    "title": "Testing robot math",
+    "title": "Planner tests",
     "skill": "Software testing",
-    "concept": "Pure math helpers are easier to test than UI behavior.",
-    "lab": "Read `src/robotics.test.ts` and add one new edge-case test.",
-    "proof": "Commit the test and note what bug it would catch."
+    "concept": "Planning code needs edge-case tests because route failures are easy to miss visually.",
+    "lab": "Read `src/robotics.test.ts` and add one new planner edge-case test.",
+    "proof": "Commit the test and note what route bug it would catch."
   },
   {
     "day": 9,
-    "title": "Obstacle thinking",
+    "title": "Obstacle stress test",
     "skill": "Autonomy",
-    "concept": "Robots must handle the world they did not ask for.",
-    "lab": "Add a new obstacle and describe how the current robot fails around it.",
+    "concept": "The planner should fail clearly when no collision-free path exists.",
+    "lab": "Add a blocking obstacle arrangement and confirm the planner reports fallback behavior.",
     "proof": "Write a short failure analysis."
   },
   {
     "day": 10,
-    "title": "Internship story",
+    "title": "Demo narrative",
     "skill": "Technical communication",
-    "concept": "A strong portfolio connects code choices to robotics outcomes.",
-    "lab": "Write a README paragraph beginning with: I built this to learn...",
-    "proof": "Update the README with one measurable result."
+    "concept": "A strong robotics project connects code choices to autonomy behavior.",
+    "lab": "Update the README with one measurable planning or control result.",
+    "proof": "Record route length, expanded cells, and the relevant test command."
   }
 ]
-
