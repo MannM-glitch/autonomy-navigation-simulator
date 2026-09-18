@@ -10,15 +10,19 @@
     "daily": "node scripts/daily-log.mjs"
   },
   "dependencies": {
+    "@mujoco/mujoco": "^3.13.0",
     "lucide-react": "^0.468.0",
+    "quadprog": "^1.6.1",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "three": "^0.186.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^6.1.0",
     "@types/node": "^22.10.1",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.2",
+    "@types/three": "^0.186.0",
+    "@vitejs/plugin-react": "^6.1.0",
     "typescript": "^5.7.2",
     "vite": "^8.2.2",
     "vitest": "^4.1.11"

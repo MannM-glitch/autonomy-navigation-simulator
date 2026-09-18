@@ -1,0 +1,126 @@
+<mujoco model="SENTRY whole-body inspection platform">
+  <compiler angle="radian"/>
+
+  <option integrator="implicitfast" cone="elliptic" iterations="50"/>
+
+  <statistic extent="1.4" center="0 0 0.25"/>
+
+  <visual>
+    <global offwidth="1280" offheight="720"/>
+    <headlight ambient="0.35 0.35 0.35" diffuse="0.7 0.7 0.7"/>
+  </visual>
+
+  <default>
+    <joint armature="0.025" damping="0.25"/>
+    <geom solref="0.008"/>
+  </default>
+
+  <asset>
+    <texture type="2d" colorspace="auto" name="grid" builtin="checker" rgb1="0.12 0.17 0.19" rgb2="0.16 0.21 0.23" width="512" height="512"/>
+    <material name="ground" texture="grid" texrepeat="12 12" reflectance="0.08"/>
+  </asset>
+
+  <worldbody>
+    <geom name="obstacle_0" size="0.18 0.28 0.225" pos="0.95 0.35 0.225" type="box" rgba="0.28 0.37 0.4 1"/>
+    <geom name="obstacle_1" size="0.22 0.18 0.16" pos="-0.85 0.85 0.16" type="box" rgba="0.28 0.37 0.4 1"/>
+    <geom name="obstacle_2" size="0.38 0.14 0.15" pos="0.3 -1.1 0.15" type="box" rgba="0.28 0.37 0.4 1"/>
+    <geom size="0.05 2.5 0.12" pos="2.45 0 0.12" type="box" rgba="0.23 0.32 0.35 1"/>
+    <geom size="0.05 2.5 0.12" pos="-2.45 0 0.12" type="box" rgba="0.23 0.32 0.35 1"/>
+    <geom size="2.4 0.05 0.12" pos="0 2.45 0.12" type="box" rgba="0.23 0.32 0.35 1"/>
+    <geom size="2.4 0.05 0.12" pos="0 -2.45 0.12" type="box" rgba="0.23 0.32 0.35 1"/>
+    <geom name="floor" size="5 5 0.1" type="plane" friction="0.8 0.02 0.002" material="ground"/>
+    <light pos="1 -2 4" dir="-0.188144 0.282216 -0.940721" diffuse="0.9 0.9 0.85"/>
+    <light castshadow="false" pos="-2 1 3" diffuse="0.4 0.55 0.65"/>
+    <body name="trunk" pos="0 0 0.435">
+      <joint type="free" armature="0" damping="0"/>
+      <geom name="chassis" size="0.29 0.16 0.065" type="box" rgba="0.88 0.57 0.18 1" mass="8"/>
+      <geom size="0.21 0.145 0.012" pos="0 0 0.075" type="box" rgba="0.15 0.22 0.26 1" mass="0.4"/>
+      <geom size="0.035 0.11 0.045" pos="0.305 0 0.015" type="box" rgba="0.13 0.2 0.24 1" mass="0.3"/>
+      <geom size="0.017" pos="0.34 0.065 0.025" rgba="0.25 0.95 0.8 1" mass="0.01"/>
+      <geom size="0.017" pos="0.34 -0.065 0.025" rgba="0.25 0.95 0.8 1" mass="0.01"/>
+      <body name="payload" pos="-0.07 0 0.1">
+        <geom size="0.065 0.045" type="cylinder" rgba="0.2 0.28 0.33 1" mass="1.45"/>
+        <geom size="0.061 0.01" pos="0 0 0.046" type="cylinder" rgba="0.25 0.9 0.75 1" mass="0.05"/>
+      </body>
+      <body name="FL_hip" pos="0.25 0.18 0">
+        <joint name="FL_abduction" range="-0.7 0.7" axis="1 0 0"/>
+        <geom size="0.035 0.0375" pos="0 0.0375 0" quat="0.707107 0.707107 0 0" type="capsule" rgba="0.18 0.24 0.29 1" mass="0.3"/>
+        <body name="FL_thigh" pos="0 0.075 0">
+          <joint name="FL_pitch" range="-1.6 1.6" axis="0 1 0"/>
+          <geom size="0.026 0.125" pos="0 0 -0.125" type="capsule" rgba="0.9 0.57 0.16 1" mass="0.55"/>
+          <geom size="0.045" rgba="0.12 0.17 0.21 1" mass="0.05"/>
+          <body name="FL_shin" pos="0 0 -0.25">
+            <joint name="FL_knee" range="0.1 2.6" axis="0 1 0"/>
+            <geom size="0.018 0.125" pos="0 0 -0.125" type="capsule" rgba="0.2 0.28 0.32 1" mass="0.3"/>
+            <geom size="0.033" rgba="0.9 0.57 0.16 1" mass="0.05"/>
+            <geom name="FL_foot" size="0.026" pos="0 0 -0.25" friction="0.8 0.02 0.002" rgba="0.07 0.1 0.12 1" mass="0.08"/>
+            <site name="FL_toe" size="0.008" pos="0 0 -0.25" rgba="0.3 0.9 0.7 1"/>
+          </body>
+        </body>
+      </body>
+      <body name="FR_hip" pos="0.25 -0.18 0">
+        <joint name="FR_abduction" range="-0.7 0.7" axis="1 0 0"/>
+        <geom size="0.035 0.0375" pos="0 -0.0375 0" quat="0.707107 -0.707107 0 0" type="capsule" rgba="0.18 0.24 0.29 1" mass="0.3"/>
+        <body name="FR_thigh" pos="0 -0.075 0">
+          <joint name="FR_pitch" range="-1.6 1.6" axis="0 1 0"/>
+          <geom size="0.026 0.125" pos="0 0 -0.125" type="capsule" rgba="0.9 0.57 0.16 1" mass="0.55"/>
+          <geom size="0.045" rgba="0.12 0.17 0.21 1" mass="0.05"/>
+          <body name="FR_shin" pos="0 0 -0.25">
+            <joint name="FR_knee" range="0.1 2.6" axis="0 1 0"/>
+            <geom size="0.018 0.125" pos="0 0 -0.125" type="capsule" rgba="0.2 0.28 0.32 1" mass="0.3"/>
+            <geom size="0.033" rgba="0.9 0.57 0.16 1" mass="0.05"/>
+            <geom name="FR_foot" size="0.026" pos="0 0 -0.25" friction="0.8 0.02 0.002" rgba="0.07 0.1 0.12 1" mass="0.08"/>
+            <site name="FR_toe" size="0.008" pos="0 0 -0.25" rgba="0.3 0.9 0.7 1"/>
+          </body>
+        </body>
+      </body>
+      <body name="RL_hip" pos="-0.25 0.18 0">
+        <joint name="RL_abduction" range="-0.7 0.7" axis="1 0 0"/>
+        <geom size="0.035 0.0375" pos="0 0.0375 0" quat="0.707107 0.707107 0 0" type="capsule" rgba="0.18 0.24 0.29 1" mass="0.3"/>
+        <body name="RL_thigh" pos="0 0.075 0">
+          <joint name="RL_pitch" range="-1.6 1.6" axis="0 1 0"/>
+          <geom size="0.026 0.125" pos="0 0 -0.125" type="capsule" rgba="0.9 0.57 0.16 1" mass="0.55"/>
+          <geom size="0.045" rgba="0.12 0.17 0.21 1" mass="0.05"/>
+          <body name="RL_shin" pos="0 0 -0.25">
+            <joint name="RL_knee" range="0.1 2.6" axis="0 1 0"/>
+            <geom size="0.018 0.125" pos="0 0 -0.125" type="capsule" rgba="0.2 0.28 0.32 1" mass="0.3"/>
+            <geom size="0.033" rgba="0.9 0.57 0.16 1" mass="0.05"/>
+            <geom name="RL_foot" size="0.026" pos="0 0 -0.25" friction="0.8 0.02 0.002" rgba="0.07 0.1 0.12 1" mass="0.08"/>
+            <site name="RL_toe" size="0.008" pos="0 0 -0.25" rgba="0.3 0.9 0.7 1"/>
+          </body>
+        </body>
+      </body>
+      <body name="RR_hip" pos="-0.25 -0.18 0">
+        <joint name="RR_abduction" range="-0.7 0.7" axis="1 0 0"/>
+        <geom size="0.035 0.0375" pos="0 -0.0375 0" quat="0.707107 -0.707107 0 0" type="capsule" rgba="0.18 0.24 0.29 1" mass="0.3"/>
+        <body name="RR_thigh" pos="0 -0.075 0">
+          <joint name="RR_pitch" range="-1.6 1.6" axis="0 1 0"/>
+          <geom size="0.026 0.125" pos="0 0 -0.125" type="capsule" rgba="0.9 0.57 0.16 1" mass="0.55"/>
+          <geom size="0.045" rgba="0.12 0.17 0.21 1" mass="0.05"/>
+          <body name="RR_shin" pos="0 0 -0.25">
+            <joint name="RR_knee" range="0.1 2.6" axis="0 1 0"/>
+            <geom size="0.018 0.125" pos="0 0 -0.125" type="capsule" rgba="0.2 0.28 0.32 1" mass="0.3"/>
+            <geom size="0.033" rgba="0.9 0.57 0.16 1" mass="0.05"/>
+            <geom name="RR_foot" size="0.026" pos="0 0 -0.25" friction="0.8 0.02 0.002" rgba="0.07 0.1 0.12 1" mass="0.08"/>
+            <site name="RR_toe" size="0.008" pos="0 0 -0.25" rgba="0.3 0.9 0.7 1"/>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <general name="FL_abduction_motor" joint="FL_abduction" ctrlrange="-32 32"/>
+    <general name="FL_pitch_motor" joint="FL_pitch" ctrlrange="-32 32"/>
+    <general name="FL_knee_motor" joint="FL_knee" ctrlrange="-32 32"/>
+    <general name="FR_abduction_motor" joint="FR_abduction" ctrlrange="-32 32"/>
+    <general name="FR_pitch_motor" joint="FR_pitch" ctrlrange="-32 32"/>
+    <general name="FR_knee_motor" joint="FR_knee" ctrlrange="-32 32"/>
+    <general name="RL_abduction_motor" joint="RL_abduction" ctrlrange="-32 32"/>
+    <general name="RL_pitch_motor" joint="RL_pitch" ctrlrange="-32 32"/>
+    <general name="RL_knee_motor" joint="RL_knee" ctrlrange="-32 32"/>
+    <general name="RR_abduction_motor" joint="RR_abduction" ctrlrange="-32 32"/>
+    <general name="RR_pitch_motor" joint="RR_pitch" ctrlrange="-32 32"/>
+    <general name="RR_knee_motor" joint="RR_knee" ctrlrange="-32 32"/>
+  </actuator>
+</mujoco>
