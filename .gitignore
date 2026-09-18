@@ -15,3 +15,4 @@ learning-log/*.tmp
 __pycache__/
 *.pyc
 simulation/output/
+.vercel/

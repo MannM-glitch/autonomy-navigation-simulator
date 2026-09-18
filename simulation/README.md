@@ -2,7 +2,7 @@
 
 A four-legged inspection platform has to lower its sensor package while keeping it level, withstand a lateral disturbance, and return to its observation height. This project uses **real MuJoCo rigid-body dynamics**, a free-floating base, 12 torque-controlled joints, gravity, collisions, and frictional ground contacts. The original robot is built from primitives; there are no downloaded meshes or pretrained policies.
 
-The robot solves a **stationary sensor-platform stabilization task**. It does not walk, navigate, detect objects, or perform a real inspection. The cylinder represents a rigid sensor payload. This narrow task makes controller behavior measurable and explainable.
+This benchmark solves a **stationary sensor-platform stabilization task**. The cylinder represents a rigid sensor payload. A separate **[live browser lab](LIVE.md)** adds torque-driven crawling, manual control, and known-map navigation. The stationary benchmark and its metrics below do not evaluate that gait.
 
 ## Run it
 
@@ -67,13 +67,13 @@ npm install
 npm run dev
 ```
 
-Open `/sentry.html`. The browser replays rendered MuJoCo frames with synchronized telemetry; it does not run live physics. The native viewer is the interactive physics entry point. Export requires a working OpenGL context; on a Linux server use Xvfb/software OpenGL. `--skip-video` exports telemetry only. The report records the MuJoCo/Python versions and a SHA-256 of the simulation source. Videos and telemetry are checked in so recruiters need only a browser.
+Open `/sentry.html#replay` for rendered MuJoCo frames with synchronized telemetry. `/sentry.html#live` instead runs actual physics through the browser's MuJoCo WASM engine. Exporting the recorded benchmark requires a working OpenGL context; on a Linux server use Xvfb/software OpenGL. `--skip-video` exports telemetry only. The report records the MuJoCo/Python versions and a SHA-256 of the simulation source. Videos and telemetry are checked in so recruiters need only a browser.
 
 ## Explain it in an interview
 
 Start with the problem: “Changing body height and rejecting disturbances requires coordinating ground forces across four legs.” Show joint PD versus whole-body control at the same timestamp. Explain the wrench matrix and why feet cannot pull on the floor. Point out gravity feedforward, friction limits, and torque saturation. Then show the slippery-floor failure and describe what would need to change to recover by stepping.
 
-Before claiming this as your work, run it, change a gain or push magnitude, regenerate the results, and explain what changed. A defensible portfolio claim is: “Implemented and evaluated a MuJoCo quadruped stance-control experiment, comparing centroidal force allocation with joint PD under scripted disturbances.” Do not claim locomotion, RL training, hardware deployment, or authorship of a pretrained policy.
+Run it, change a gain or push magnitude, regenerate the results, and explain what changed. A portfolio description for this benchmark is: “Evaluated a MuJoCo quadruped stance-control experiment, comparing centroidal force allocation with joint PD under scripted disturbances.” The separate live lab demonstrates locomotion and known-map navigation; neither project includes RL training, hardware deployment, or a pretrained policy.
 
 ## References
 

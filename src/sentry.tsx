@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ArrowDownToLine, ArrowUpRight, Activity, Box, Check, ChevronRight, Code2, Cpu, ExternalLink, Pause, Play, RotateCcw, ScanLine } from 'lucide-react';
 import './sentry.css';
+import LiveLab from './LiveLab';
 
 type Mode = 'whole_body' | 'joint_pd';
 type Frame = { time: number; phase: string; height: number; targetHeight: number; roll: number; pitch: number; drift: number; loads: number[]; push: number[]; torque: number };
@@ -148,4 +149,17 @@ function App() {
   </div>;
 }
 
-createRoot(document.getElementById('root')!).render(<React.StrictMode><App/></React.StrictMode>);
+function Workspace() {
+  const [live, setLive] = useState(!['#replay','#experiment','#evidence','#method','#top'].includes(location.hash));
+  useEffect(() => {
+    const navigate = () => {
+      if (location.hash === '#live') setLive(true);
+      else if (location.hash === '#replay') setLive(false);
+    };
+    window.addEventListener('hashchange', navigate);
+    return () => window.removeEventListener('hashchange', navigate);
+  }, []);
+  return live ? <LiveLab/> : <><a href="#live" className="return-live">← Drive the robot in live physics</a><App/></>;
+}
+
+createRoot(document.getElementById('root')!).render(<React.StrictMode><Workspace/></React.StrictMode>);

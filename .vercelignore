@@ -1,0 +1,10 @@
+.git
+.venv
+node_modules
+dist
+simulation/output
+__pycache__
+*.pyc
+*.tsbuildinfo
+coverage
+.env*

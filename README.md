@@ -2,9 +2,11 @@
 
 Interactive robotics software project for autonomous route planning, differential-drive control, noisy range sensing, and telemetry inspection.
 
-## Whole-body MuJoCo experiment
+## SENTRY: live whole-body MuJoCo lab
 
-**[SENTRY: a 12-actuator quadruped that lowers a sensor platform and recovers from pushes](SENTRY.md)** adds a full-body physics experiment to this repository. Run `npm run dev` and open **[/sentry.html](http://127.0.0.1:5173/sentry.html)** for the visual comparison, telemetry, and five-case benchmark. See the [simulation guide](simulation/README.md) to launch the live MuJoCo viewer, reproduce the results, and understand the controller's limits.
+**[Launch the live demo on Vercel →](https://sentry-robotics-lab.vercel.app)**
+
+**[SENTRY: a 12-actuator quadruped with manual control and obstacle navigation](SENTRY.md)** runs real MuJoCo physics in the browser. Run `npm run dev` and open **[/sentry.html](http://127.0.0.1:5173/sentry.html)**. Hold WASD/Q/E or select a destination on the map. No Python server is needed. See the [live architecture guide](simulation/LIVE.md) for the torque-driven crawl, A* planner, and Vercel deployment. The [stationary experiment guide](simulation/README.md) explains the separate controller comparison and five-case benchmark.
 
 ## Project Summary
 
