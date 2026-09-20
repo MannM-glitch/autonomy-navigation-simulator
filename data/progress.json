@@ -1,6 +1,6 @@
 {
-  "currentMissionIndex": 7,
-  "lastGeneratedAt": "2026-09-19T16:32:11.852Z",
+  "currentMissionIndex": 8,
+  "lastGeneratedAt": "2026-09-20T16:51:07.022Z",
   "history": [
     {
       "date": "2026-08-24",
@@ -163,6 +163,12 @@
       "missionDay": 7,
       "title": "ROS2-style interface map",
       "skill": "ROS2 architecture"
+    },
+    {
+      "date": "2026-09-20",
+      "missionDay": 8,
+      "title": "Planner tests",
+      "skill": "Software testing"
     }
   ]
 }
