@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import loadMujoco, { type MainModule } from '@mujoco/mujoco';
 import wasmUrl from '@mujoco/mujoco/mujoco.wasm?url';
 import { BrowserRobot, type Command, type RobotState } from './physics';
-import { RobotRenderer } from './renderer';
+import { createRobotDisplay, type DisplayMode } from './display';
 import type { Arena } from './navigation';
 
 let engine: Promise<MainModule> | null=null;
@@ -13,7 +13,8 @@ function inputCommand(held: Set<string>): Command {
 }
 
 export function useBrowserRobot() {
-  const canvasRef=useRef<HTMLCanvasElement>(null),robotRef=useRef<BrowserRobot|null>(null);
+  const sceneRef=useRef<HTMLDivElement>(null),robotRef=useRef<BrowserRobot|null>(null);
+  const [displayMode,setDisplayMode]=useState<DisplayMode>('3d');
   const input=useRef(new Set<string>());
   const [state,setState]=useState<RobotState|null>(null),[connected,setConnected]=useState(false);
   const [held,setHeld]=useState<Set<string>>(new Set()),[error,setError]=useState('');
@@ -33,7 +34,7 @@ export function useBrowserRobot() {
   },[]);
 
   useEffect(()=>{
-    let cancelled=false,frame=0,robot:BrowserRobot|null=null,renderer:RobotRenderer|null=null;
+    let cancelled=false,frame=0,robot:BrowserRobot|null=null,renderer:ReturnType<typeof createRobotDisplay>|null=null;
     const controller=new AbortController();
     async function initialize() {
       try {
@@ -42,7 +43,9 @@ export function useBrowserRobot() {
         if(!xmlResponse.ok || !arenaResponse.ok)throw new Error('Robot model could not load. Reload to retry.');
         const xml=await xmlResponse.text(),arena=await arenaResponse.json() as Arena;
         if(cancelled)return;
-        robot=new BrowserRobot(mj,xml,arena);renderer=new RobotRenderer(canvasRef.current!,robot);robotRef.current=robot;
+        robot=new BrowserRobot(mj,xml,arena);
+        renderer=createRobotDisplay(sceneRef.current!,robot,setDisplayMode,new URLSearchParams(location.search).get('view')==='2d');
+        robotRef.current=robot;
         setConnected(true);setError('');setState(robot.snapshot());
         let previous=performance.now(),accumulator=0,lastState=0,statsAt=previous,statsTime=0,frames=0,fps=60,factor=1;
         const tick=(now:number)=>{
@@ -85,5 +88,5 @@ export function useBrowserRobot() {
     window.addEventListener('keydown',down);window.addEventListener('keyup',up);window.addEventListener('blur',blur);window.addEventListener('pagehide',blur);document.addEventListener('visibilitychange',visibility);
     return ()=>{release();window.removeEventListener('keydown',down);window.removeEventListener('keyup',up);window.removeEventListener('blur',blur);window.removeEventListener('pagehide',blur);document.removeEventListener('visibilitychange',visibility);};
   },[release,setKey]);
-  return {state,connected,held,error,send,release,setKey,canvasRef};
+  return {state,connected,held,error,send,release,setKey,sceneRef,displayMode};
 }

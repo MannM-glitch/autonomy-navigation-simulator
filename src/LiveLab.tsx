@@ -40,7 +40,7 @@ function NavigationMap({ state, enabled, onGoal }: { state: State | null; enable
 }
 
 export default function LiveLab() {
-  const { state: s, connected, held, error, send, release, setKey, canvasRef } = useBrowserRobot();
+  const { state: s, connected, held, error, send, release, setKey, sceneRef, displayMode } = useBrowserRobot();
   
   const available = connected && !s?.paused && s?.mode !== 'fallen';
   function goal(point: Point) { release(false); void send({action:'goal',target:point}); }
@@ -57,14 +57,19 @@ export default function LiveLab() {
     <header className="site-header"><a className="brand" href="#live"><span className="brand-mark"><ScanLine size={22}/></span>SENTRY<span className="brand-tag">LIVE ROBOTICS LAB</span></a><nav aria-label="Lab mode"><a className="nav-active" href="#live">Live control</a><a href="#replay">Recorded experiment</a></nav><a className="source-link" href="https://github.com/MannM-glitch/autonomy-navigation-simulator/blob/main/simulation/LIVE.md" target="_blank" rel="noreferrer">How it works <ArrowUpRight size={15}/></a></header>
     <main>
       <section className="live-hero"><div><div className="eyebrow"><span className="status-dot"/> TELEOPERATION + POINT-TO-POINT NAVIGATION</div><h1>Your robot. Your next move.</h1><p>Drive a real MuJoCo quadruped, or give it a destination. Every step is simulated live.</p></div><div className={`connection-pill ${connected ? 'online' : ''}`}>{connected ? <Wifi size={14}/> : <WifiOff size={14}/>} {connected ? s?.paused ? 'Physics paused' : 'Browser physics running' : error ? 'Load failed' : 'Loading physics'}</div></section>
+      <section className="live-start" aria-label="Getting started">
+        <ol><li><b>1. Open & wait</b><span>Wait for “Browser physics running.” No install or sign-in.</span></li><li><b>2. Try a route</b><span>Start the walking demo. It takes about a minute.</span></li><li><b>3. Take control</b><span>Hold W / S to walk, A / D to turn. Space stops.</span></li></ol>
+        <button disabled={!connected} onClick={()=>{command({action:'reset'});goal([1.4,1.3]);}}>Start walking demo <ArrowUpRight size={15}/></button>
+      </section>
+      {connected && displayMode==='compatibility' && <p className="compatibility-note" role="status">Compatibility view active. Live physics, navigation, and all controls still work.</p>}
       <div className="live-summary"><div><span>SIMULATION TIME</span><strong>{short(s?.time,1)}<small>s</small></strong></div><div><span>POSITION / METRES</span><strong>{short(s?.position[0])}<small>x</small> {short(s?.position[1])}<small>y</small></strong></div><div><span>COMPLETED STEPS</span><strong>{s?.steps ?? '—'}</strong></div><div><span>REAL-TIME FACTOR</span><strong>{connected ? short(s?.realTimeFactor) : '—'}<small>×</small><em>{connected ? `${short(s?.fps,0)} fps` : 'Loading engine'}</em></strong></div></div>
       <div className="live-workspace">
         <section className="live-scene-panel">
           <div className="panel-toolbar"><div className="panel-title"><span className="tiny-index">01</span> Live physics <span className="live-tag">{s?.mode === 'navigate' ? 'AUTONOMOUS' : 'USER CONTROL'}</span></div><div className="camera-toggle"><button disabled={!connected} aria-pressed={s?.camera === 'follow'} onClick={() => void send({action:'camera',view:'follow'})}><Crosshair size={13}/> Follow</button><button disabled={!connected} aria-pressed={s?.camera === 'overview'} onClick={() => void send({action:'camera',view:'overview'})}><Expand size={13}/> Arena</button></div></div>
           <div className="live-scene">
-            <canvas ref={canvasRef} className="live-canvas" aria-label="Live MuJoCo quadruped in an obstacle arena"/>
+            <div ref={sceneRef} className="live-canvas" role="img" aria-label="Live MuJoCo quadruped in an obstacle arena"/>
             {connected && <><div className="scene-caption"><span className="status-dot"/>{s?.paused ? 'PAUSED' : 'LIVE · TORQUE-DRIVEN CRAWL'}</div><div className="scene-time">{short(s?.time,2)} s</div><div className="phase-badge"><span className="phase-kicker">GAIT PHASE</span><strong>{s?.phase}</strong></div><span className="live-render-note">{s?.camera === 'follow' ? 'Tracking camera' : 'Arena overview'}</span></>}
-            {!connected && <div className="live-offline"><Terminal size={26}/><h2>{error ? 'Physics could not start.' : 'Loading real robot physics…'}</h2><p>{error || 'Downloading MuJoCo and preparing the robot. The simulation runs entirely in your browser.'}</p>{error && <button className="launch-command" onClick={() => location.reload()}>Reload physics</button>}<p className="offline-help">No Python server or account required. <a href="#replay">Watch the recorded experiment →</a></p></div>}
+            {!connected && <div className="live-offline"><Terminal size={26}/><h2>{error ? 'Simulation could not start.' : 'Loading real robot physics…'}</h2><p>{error || 'Downloading MuJoCo and preparing the robot. The simulation runs entirely in your browser.'}</p>{error && <><button className="launch-command" onClick={() => location.reload()}>Reload physics</button><a href="?view=2d#live">Try compatibility view →</a></>}<p className="offline-help">No Python server or account required. <a href="#replay">Watch the recorded experiment →</a></p></div>}
             {connected && s?.mode === 'fallen' && <div className="fallen-overlay"><strong>Balance lost</strong><span>Reset the robot to continue.</span><button onClick={() => command({action:'reset'})}><RotateCcw size={14}/> Reset robot</button></div>}
           </div>
           <div className="live-action-bar"><button className="live-stop" disabled={!connected} onClick={() => release()}><Square size={13} fill="currentColor"/> Stop <kbd>SPACE</kbd></button><button disabled={!connected} onClick={() => command({action:'pause',paused:!s?.paused})}>{s?.paused ? <CirclePlay size={16}/> : <CirclePause size={16}/>} {s?.paused ? 'Resume physics' : 'Pause physics'}</button><button disabled={!connected} onClick={() => command({action:'reset'})}><RotateCcw size={15}/> Reset robot</button></div>

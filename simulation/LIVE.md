@@ -9,7 +9,9 @@ npm ci
 npm run dev
 ```
 
-Open http://127.0.0.1:5173/sentry.html#live. Hold **W/S** to walk forward/back, **A/D** to turn, and **Q/E** to strafe. Arrow keys and the on-screen buttons also work. **Space** cancels the command. Releasing a command finishes the current footstep before holding. Leaving the page releases commands; hidden tabs pause physics.
+Open http://127.0.0.1:5173/sentry.html#live, wait for **Browser physics running**, and click **Start walking demo** for a first route. Hold **W/S** to walk forward/back, **A/D** to turn, and **Q/E** to strafe. Arrow keys and the on-screen buttons also work. **Space** cancels the command. Releasing a command finishes the current footstep before holding. Leaving the page releases commands; hidden tabs pause physics.
+
+If WebGL is unavailable or its context is lost, the app automatically uses a Canvas2D isometric view of the same MuJoCo geometry. Physics and controls keep running. You can also open `/sentry.html?view=2d#live` to choose this compatibility view directly. There is no need to change browser security or graphics settings.
 
 Click clear floor on the map to select a goal, or try **Around the crates**. The green route is the plan; the blue trail is measured trunk motion. The crawl is deliberately slow: manual translation is capped at 0.06 m/s, navigation at 0.05 m/s, and a footstep takes 0.95 s. Allow roughly a minute for the crates route. Pause, reset, and switch to the arena camera with the toolbar.
 
@@ -56,7 +58,7 @@ vercel link --project sentry-robotics-lab
 vercel deploy --prod
 ```
 
-The engine is about 10 MB before compression. A WebAssembly/WebGL-capable browser is required. Rendering targets 30 frames/s; the displayed real-time factor and frame rate are measured, and may be lower on slow hardware or throttled tabs. Physics uses fixed 2 ms steps with bounded catch-up, not variable timesteps.
+The engine is about 10 MB before compression. A WebAssembly-capable browser is required; WebGL is optional. Rendering targets 30 frames/s; the displayed real-time factor and frame rate are measured, and may be lower on slow hardware or throttled tabs. Physics uses fixed 2 ms steps with bounded catch-up, not variable timesteps. Compatibility rendering uses approximate primitive silhouettes and painter sorting; it changes only the view, not the physics.
 
 ## Scope and an interview walkthrough
 
