@@ -1,6 +1,6 @@
 {
-  "currentMissionIndex": 8,
-  "lastGeneratedAt": "2026-09-20T16:51:07.022Z",
+  "currentMissionIndex": 9,
+  "lastGeneratedAt": "2026-09-21T18:45:01.292Z",
   "history": [
     {
       "date": "2026-08-24",
@@ -169,6 +169,12 @@
       "missionDay": 8,
       "title": "Planner tests",
       "skill": "Software testing"
+    },
+    {
+      "date": "2026-09-21",
+      "missionDay": 9,
+      "title": "Obstacle stress test",
+      "skill": "Autonomy"
     }
   ]
 }
