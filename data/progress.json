@@ -1,6 +1,6 @@
 {
-  "currentMissionIndex": 9,
-  "lastGeneratedAt": "2026-09-21T18:45:01.292Z",
+  "currentMissionIndex": 10,
+  "lastGeneratedAt": "2026-09-22T17:39:25.598Z",
   "history": [
     {
       "date": "2026-08-24",
@@ -175,6 +175,12 @@
       "missionDay": 9,
       "title": "Obstacle stress test",
       "skill": "Autonomy"
+    },
+    {
+      "date": "2026-09-22",
+      "missionDay": 10,
+      "title": "Demo narrative",
+      "skill": "Technical communication"
     }
   ]
 }
