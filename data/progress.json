@@ -1,6 +1,6 @@
 {
-  "currentMissionIndex": 3,
-  "lastGeneratedAt": "2026-09-25T17:58:42.516Z",
+  "currentMissionIndex": 4,
+  "lastGeneratedAt": "2026-09-26T17:14:10.877Z",
   "history": [
     {
       "date": "2026-08-24",
@@ -199,6 +199,12 @@
       "missionDay": 3,
       "title": "PID tuning",
       "skill": "Controls"
+    },
+    {
+      "date": "2026-09-26",
+      "missionDay": 4,
+      "title": "Range-sensor noise",
+      "skill": "Sensor processing"
     }
   ]
 }
