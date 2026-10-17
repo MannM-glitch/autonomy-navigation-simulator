@@ -1,6 +1,6 @@
 {
-  "currentMissionIndex": 4,
-  "lastGeneratedAt": "2026-10-16T17:29:10.183Z",
+  "currentMissionIndex": 5,
+  "lastGeneratedAt": "2026-10-17T16:28:43.852Z",
   "history": [
     {
       "date": "2026-08-24",
@@ -325,6 +325,12 @@
       "missionDay": 4,
       "title": "Range-sensor noise",
       "skill": "Sensor processing"
+    },
+    {
+      "date": "2026-10-17",
+      "missionDay": 5,
+      "title": "A* route planning",
+      "skill": "Motion planning"
     }
   ]
 }
