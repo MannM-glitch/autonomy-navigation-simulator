@@ -1,6 +1,6 @@
 {
-  "currentMissionIndex": 2,
-  "lastGeneratedAt": "2026-11-03T20:08:14.789Z",
+  "currentMissionIndex": 3,
+  "lastGeneratedAt": "2026-11-04T20:26:52.157Z",
   "history": [
     {
       "date": "2026-08-24",
@@ -433,6 +433,12 @@
       "missionDay": 2,
       "title": "Coordinate frames",
       "skill": "Math for robotics"
+    },
+    {
+      "date": "2026-11-04",
+      "missionDay": 3,
+      "title": "PID tuning",
+      "skill": "Controls"
     }
   ]
 }
