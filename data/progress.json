@@ -1,6 +1,6 @@
 {
-  "currentMissionIndex": 6,
-  "lastGeneratedAt": "2026-11-07T18:03:41.008Z",
+  "currentMissionIndex": 7,
+  "lastGeneratedAt": "2026-11-08T18:22:57.729Z",
   "history": [
     {
       "date": "2026-08-24",
@@ -457,6 +457,12 @@
       "missionDay": 6,
       "title": "Trace analysis",
       "skill": "Debugging and data"
+    },
+    {
+      "date": "2026-11-08",
+      "missionDay": 7,
+      "title": "ROS2-style interface map",
+      "skill": "ROS2 architecture"
     }
   ]
 }
