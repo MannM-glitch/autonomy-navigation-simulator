@@ -1,6 +1,6 @@
 {
-  "currentMissionIndex": 10,
-  "lastGeneratedAt": "2026-11-11T20:13:39.112Z",
+  "currentMissionIndex": 1,
+  "lastGeneratedAt": "2026-11-12T20:52:32.765Z",
   "history": [
     {
       "date": "2026-08-24",
@@ -481,6 +481,12 @@
       "missionDay": 10,
       "title": "Demo narrative",
       "skill": "Technical communication"
+    },
+    {
+      "date": "2026-11-12",
+      "missionDay": 1,
+      "title": "Robot loop instrumentation",
+      "skill": "Robotics fundamentals"
     }
   ]
 }
