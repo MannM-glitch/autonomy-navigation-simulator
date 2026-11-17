@@ -1,6 +1,6 @@
 {
-  "currentMissionIndex": 5,
-  "lastGeneratedAt": "2026-11-16T22:55:13.532Z",
+  "currentMissionIndex": 6,
+  "lastGeneratedAt": "2026-11-17T21:47:59.950Z",
   "history": [
     {
       "date": "2026-08-24",
@@ -511,6 +511,12 @@
       "missionDay": 5,
       "title": "A* route planning",
       "skill": "Motion planning"
+    },
+    {
+      "date": "2026-11-17",
+      "missionDay": 6,
+      "title": "Trace analysis",
+      "skill": "Debugging and data"
     }
   ]
 }
